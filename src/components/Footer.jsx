@@ -3,7 +3,7 @@ import { ChefHat } from 'lucide-react';
 
 export default function Footer() {
     return (
-        <footer id="contact" className="bg-[#1F1A17] text-[#F4EFE8] pt-24 pb-8 px-6 rounded-t-[4rem] mt-[-2rem] relative z-30">
+        <footer id="contact" className="bg-[#1F1A17] text-[#F4EFE8] pt-16 md:pt-24 pb-8 px-4 md:px-6 rounded-t-[2rem] md:rounded-t-[4rem] mt-[-2rem] relative z-30">
             <div className="max-w-6xl mx-auto">
                 <div className="grid grid-cols-1 md:grid-cols-12 gap-12 lg:gap-8 mb-20">
 

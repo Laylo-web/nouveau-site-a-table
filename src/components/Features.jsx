@@ -188,10 +188,10 @@ export default function Features() {
     }, []);
 
     return (
-        <section ref={containerRef} className="py-24 md:py-32 px-6 bg-brand-background relative z-20 rounded-t-[3rem] -mt-10 overflow-hidden">
+        <section ref={containerRef} className="py-16 md:py-32 px-4 md:px-6 bg-brand-background relative z-20 rounded-t-[2rem] md:rounded-t-[3rem] -mt-10 overflow-hidden">
             <div className="max-w-6xl mx-auto">
-                <div className="mb-16">
-                    <h2 className="font-drama italic text-4xl md:text-5xl text-brand-dark mb-4">Fonctionnement simplifié</h2>
+                <div className="mb-10 md:mb-16">
+                    <h2 className="font-drama italic text-3xl md:text-5xl text-brand-dark mb-3 md:mb-4">Fonctionnement simplifié</h2>
                     <p className="font-sans text-brand-dark/70 max-w-lg text-lg">
                         Tout est pensé pour votre tranquillité d’esprit, de la cuisine à la livraison.
                     </p>

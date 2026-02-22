@@ -24,10 +24,10 @@ export default function Pricing() {
     ];
 
     return (
-        <section className="py-32 px-6 bg-brand-background relative z-20">
+        <section className="py-20 md:py-32 px-4 md:px-6 bg-brand-background relative z-20">
             <div className="max-w-6xl mx-auto">
                 <div className="text-center mb-16">
-                    <h2 className="font-drama italic text-4xl md:text-5xl text-brand-dark mb-4">Nos formules</h2>
+                    <h2 className="font-drama italic text-3xl md:text-5xl text-brand-dark mb-3 md:mb-4">Nos formules</h2>
                     <p className="font-sans text-brand-dark/70 max-w-lg mx-auto text-lg">
                         Des recettes qui changent tous les jours, adaptées à vos envies.
                     </p>

@@ -42,7 +42,7 @@ export default function Philosophy() {
     return (
         <section
             ref={containerRef}
-            className="relative w-full py-40 flex items-center justify-center overflow-hidden bg-brand-dark"
+            className="relative w-full py-24 md:py-40 flex items-center justify-center overflow-hidden bg-brand-dark"
         >
             {/* Background Texture */}
             <div

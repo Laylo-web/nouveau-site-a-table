@@ -28,7 +28,7 @@ export default function Hero() {
             </div>
 
             {/* Content */}
-            <div className="relative z-10 w-full max-w-7xl mx-auto px-6 pb-20 md:pb-32">
+            <div className="relative z-10 w-full max-w-7xl mx-auto px-6 pb-28 md:pb-32">
                 <div className="max-w-3xl">
                     <h1 className="text-white flex flex-col gap-2 mb-6">
                         <span className="hero-elem font-sans font-bold text-3xl md:text-5xl lg:text-6xl tracking-tight text-[#EFE4D9]">

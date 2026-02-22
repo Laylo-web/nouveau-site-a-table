@@ -42,15 +42,62 @@ const steps = [
     {
         num: "04",
         title: "SAP déduit automatiquement",
-        body: "Vous ne payez que 50% du prix affiché. Nous gérons toutes les démarches administratives avec l’URSSAF pour vous.",
+        body: "Vous ne payez que 50% du prix affiché. Nous gérons toutes les démarches administratives avec l'URSSAF pour vous.",
         bullets: [
             "50% déduits immédiatement",
             "Aucune démarche à faire",
-            "Nous gérons tout l’administratif"
+            "Nous gérons tout l'administratif"
         ],
         Icon: ShieldCheck
     }
 ];
+
+const StepCard = ({ step, idx, cardRef }) => (
+    <div
+        ref={cardRef}
+        className="w-full bg-brand-surface border border-brand-primary/10 rounded-[1.5rem] md:rounded-[2rem] p-6 md:p-12 shadow-md flex flex-col md:flex-row gap-6 md:gap-8 items-center"
+        style={{ zIndex: steps.length - idx }}
+    >
+        {/* Left Side: Icon & Number */}
+        <div className="w-full md:w-1/3 flex flex-row md:flex-col items-center md:items-start gap-4 md:gap-0 justify-start text-left">
+            <div className="w-16 h-16 md:w-24 md:h-24 rounded-full bg-brand-primary/10 flex items-center justify-center text-brand-primary shrink-0 md:mb-6">
+                <step.Icon size={28} className="md:hidden" strokeWidth={1.5} />
+                <step.Icon size={40} className="hidden md:block" strokeWidth={1.5} />
+            </div>
+            <div className="md:hidden">
+                <span className="font-mono text-xs font-bold text-brand-primary tracking-widest uppercase">
+                    Étape {step.num}
+                </span>
+                <h3 className="font-sans font-bold text-xl text-brand-dark mt-1">
+                    {step.title}
+                </h3>
+            </div>
+            <span className="hidden md:block font-mono text-base font-bold text-brand-primary mb-4 tracking-widest uppercase">
+                Étape {step.num}
+            </span>
+        </div>
+
+        {/* Right Side: Content */}
+        <div className="w-full md:w-2/3 flex flex-col justify-center">
+            <h3 className="hidden md:block font-sans font-bold text-2xl md:text-3xl text-brand-dark mb-4">
+                {step.title}
+            </h3>
+            <p className="font-sans text-brand-dark/70 text-sm md:text-lg mb-5 md:mb-8 leading-relaxed">
+                {step.body}
+            </p>
+            <ul className="space-y-3 md:space-y-4">
+                {step.bullets.map((bullet, i) => (
+                    <li key={i} className="flex items-start gap-2.5 md:gap-3">
+                        <Check size={18} className="text-[#878232] shrink-0 mt-0.5 md:w-5 md:h-5" strokeWidth={2.5} />
+                        <span className="font-sans text-brand-dark/80 font-medium text-sm md:text-base">
+                            {bullet}
+                        </span>
+                    </li>
+                ))}
+            </ul>
+        </div>
+    </div>
+);
 
 export default function Protocol() {
     const sectionRef = useRef(null);
@@ -71,18 +118,17 @@ export default function Protocol() {
                     scrollTrigger: {
                         trigger: sectionRef.current,
                         start: "top top",
-                        end: "+=350%", // Scrub over 3.5 viewport heights
+                        end: "+=350%",
                         scrub: 1,
                         pin: true,
                         anticipatePin: 1
                     }
                 });
 
-                // Add a small pause at the very beginning
                 tl.to({}, { duration: 0.2 });
 
                 cards.forEach((card, i) => {
-                    if (i === 0) return; // Skip first card, it's already there
+                    if (i === 0) return;
 
                     tl.to(cards[i - 1], {
                         scale: 0.96,
@@ -99,24 +145,47 @@ export default function Protocol() {
                             ease: "power2.out"
                         }, `step${i}`);
 
-                    // Add a pause at the end of each card animation to let the user read
                     tl.to({}, { duration: 0.8 });
                 });
             });
 
-            // Mobile fallback animation: simple stacked fade up
+            // Mobile: horizontal swipe-style scrolling (pinned)
             mm.add("(max-width: 767px)", () => {
-                cardsRef.current.forEach((card) => {
-                    gsap.from(card, {
-                        scrollTrigger: {
-                            trigger: card,
-                            start: "top 85%",
-                        },
-                        y: 30,
+                const cards = cardsRef.current;
+
+                // Set initial states for all cards except the first
+                gsap.set(cards.slice(1), { yPercent: 100, opacity: 0 });
+
+                const tl = gsap.timeline({
+                    scrollTrigger: {
+                        trigger: sectionRef.current,
+                        start: "top top",
+                        end: "+=300%",
+                        scrub: 0.8,
+                        pin: true,
+                        anticipatePin: 1
+                    }
+                });
+
+                tl.to({}, { duration: 0.15 });
+
+                cards.forEach((card, i) => {
+                    if (i === 0) return;
+
+                    tl.to(cards[i - 1], {
                         opacity: 0,
-                        duration: 0.8,
-                        ease: "power2.out"
-                    });
+                        yPercent: -20,
+                        scale: 0.95,
+                        duration: 1
+                    }, `mstep${i}`)
+                        .to(card, {
+                            yPercent: 0,
+                            opacity: 1,
+                            duration: 1,
+                            ease: "power2.out"
+                        }, `mstep${i}`);
+
+                    tl.to({}, { duration: 0.6 });
                 });
             });
 
@@ -126,57 +195,28 @@ export default function Protocol() {
     }, []);
 
     return (
-        <section ref={sectionRef} className="py-24 md:py-0 md:min-h-[100dvh] bg-brand-background relative z-20 md:flex md:flex-col md:justify-center overflow-hidden">
-            <div className="max-w-6xl mx-auto px-6 w-full">
+        <section ref={sectionRef} className="min-h-[100dvh] bg-brand-background relative z-20 flex flex-col justify-center overflow-hidden py-16 md:py-0">
+            <div className="max-w-6xl mx-auto px-4 md:px-6 w-full">
 
                 {/* Header */}
-                <div className="mb-12 md:mb-16 text-center md:text-left">
-                    <h2 className="font-drama italic text-4xl md:text-5xl text-brand-dark mb-4">
+                <div className="mb-8 md:mb-16 text-center md:text-left">
+                    <h2 className="font-drama italic text-3xl md:text-5xl text-brand-dark mb-3 md:mb-4">
                         Comment fonctionne À Table ?
                     </h2>
-                    <p className="font-sans text-brand-dark/70 text-lg max-w-2xl md:mx-0 mx-auto">
+                    <p className="font-sans text-brand-dark/70 text-base md:text-lg max-w-2xl md:mx-0 mx-auto">
                         Un service simple et sans contrainte, tout est pris en charge pour vous.
                     </p>
                 </div>
 
                 {/* Cards Container */}
-                <div className="relative md:h-[450px] w-full max-w-5xl mx-auto flex flex-col md:block gap-8 md:gap-0">
+                <div className="relative h-[420px] md:h-[450px] w-full max-w-5xl mx-auto">
                     {steps.map((step, idx) => (
                         <div
                             key={idx}
                             ref={(el) => (cardsRef.current[idx] = el)}
-                            className="md:absolute md:inset-0 w-full bg-brand-surface border border-brand-primary/10 rounded-[2rem] p-8 md:p-12 shadow-md flex flex-col md:flex-row gap-8 items-center"
-                            style={{ zIndex: steps.length - idx }}
+                            className="absolute inset-0"
                         >
-                            {/* Left Side: Icon & Number */}
-                            <div className="w-full md:w-1/3 flex flex-col items-center md:items-start justify-center text-center md:text-left">
-                                <span className="font-mono text-sm md:text-base font-bold text-brand-primary mb-4 tracking-widest uppercase">
-                                    Étape {step.num}
-                                </span>
-                                <div className="w-24 h-24 rounded-full bg-brand-primary/10 flex items-center justify-center text-brand-primary mb-6">
-                                    <step.Icon size={40} strokeWidth={1.5} />
-                                </div>
-                            </div>
-
-                            {/* Right Side: Content */}
-                            <div className="w-full md:w-2/3 flex flex-col justify-center">
-                                <h3 className="font-sans font-bold text-2xl md:text-3xl text-brand-dark mb-4">
-                                    {step.title}
-                                </h3>
-                                <p className="font-sans text-brand-dark/70 text-base md:text-lg mb-8 leading-relaxed">
-                                    {step.body}
-                                </p>
-                                <ul className="space-y-4">
-                                    {step.bullets.map((bullet, i) => (
-                                        <li key={i} className="flex items-start gap-3">
-                                            <Check size={20} className="text-[#878232] shrink-0 mt-0.5" strokeWidth={2.5} />
-                                            <span className="font-sans text-brand-dark/80 font-medium">
-                                                {bullet}
-                                            </span>
-                                        </li>
-                                    ))}
-                                </ul>
-                            </div>
+                            <StepCard step={step} idx={idx} />
                         </div>
                     ))}
                 </div>
